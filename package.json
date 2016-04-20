@@ -1,0 +1,34 @@
+{
+  "name": "my-view",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "jsnext:main": "src.js",
+  "files": [ "index.js", "src.js" ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "rollup -c | babel --presets=babel-preset-normal-please > index.js",
+    "deploy": "git add . && git commit -am 'fix' && git push && npm publish"
+  },
+  "dependencies": {
+    "my-event": "^1.0.0", 
+    "my-util": "^1.0.0"
+  },
+  "devDependencies": {
+    "rollup": "*",
+    "rollup-plugin-node-resolve": "*",
+    "babel-cli": "*",
+    "babel-preset-normal-please": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QiV/my-view.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/QiV/my-view/issues"
+  },
+  "homepage": "https://github.com/QiV/my-view#readme"
+}
