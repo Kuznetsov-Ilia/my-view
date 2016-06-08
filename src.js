@@ -173,7 +173,7 @@ Object.assign(Eventable(View.prototype), {
         
       }
     }
-  } 
+  },
 
   parse (values) {
     this.state = this.state || {};
