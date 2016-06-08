@@ -23,9 +23,9 @@ function View (options={}) {
   this.el = this.template.el;
   this.delegateEvents();
   if (this.template.isRendered) {
-    this.template.reset(Object.assign({}, this.defaults, options.defaults));
-    if (options.args) {
-      this.set(options.args);
+    this.template.reset(Object.assign({}, this.defaults, options.defaults, options.args));
+    if (this.listenIn) {
+      this._listenIn(this.listenIn);
     }
   }
   if (this.init !== noop) {
@@ -153,6 +153,27 @@ Object.assign(Eventable(View.prototype), {
       });
     }*/
   },
+  _listenIn (child) {
+    if (isArray(child)) {
+      return child.forEach(c => this._listenIn(c));
+    }
+    if (child) {
+      var Child = this.template.get(child);
+      if (Child && Child.on) {
+        Child.on(
+          'all',
+          function (name, a1, a2, a3, a4) {
+            if (a4 === undefined) {
+              this.trigger(`${child}:${name}`, a1, a2, a3)
+            } else {
+              this.trigger.call(this, [`${child}:${name}`].concat(arguments.slice(1)))
+            }
+          }
+        )
+        
+      }
+    }
+  } 
 
   parse (values) {
     this.state = this.state || {};
@@ -194,7 +215,7 @@ Object.assign(Eventable(View.prototype), {
     }
     this.template.set(vals);
     return this;
-  }
+  },
 
 });
 
