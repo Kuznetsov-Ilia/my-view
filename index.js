@@ -463,21 +463,22 @@ Object.assign(Eventable(View.prototype), {
       }*/
   },
   _listenIn: function _listenIn(child) {
-    var _this = this;
+    var _this2 = this;
 
     if (isArray(child)) {
       return child.forEach(function (c) {
-        return _this._listenIn(c);
+        return _this2._listenIn(c);
       });
     }
     if (child) {
       var Child = this.template.get(child);
+      var _this = this;
       if (Child && Child.on) {
         Child.on('all', function (name, a1, a2, a3, a4) {
           if (a4 === undefined) {
-            this.trigger(child + ':' + name, a1, a2, a3);
+            _this.trigger(child + ':' + name, a1, a2, a3);
           } else {
-            this.trigger.call(this, [child + ':' + name].concat(arguments.slice(1)));
+            _this.trigger.call(this, [child + ':' + name].concat(arguments.slice(1)));
           }
         });
       }
@@ -501,7 +502,7 @@ Object.assign(Eventable(View.prototype), {
     return this;
   },
   set: function set(key, value) {
-    var _this2 = this;
+    var _this3 = this;
 
     if (key === undefined) {
       return this;
@@ -517,8 +518,8 @@ Object.assign(Eventable(View.prototype), {
     var vals = this.state = this.parse(Object.assign(this.args, values));
     if (isset(this.tKeys)) {
       vals = this.tKeys.reduce(function (acc, val) {
-        if (val in _this2.state) {
-          acc[val] = _this2.state[val];
+        if (val in _this3.state) {
+          acc[val] = _this3.state[val];
         }
         return acc;
       }, {});

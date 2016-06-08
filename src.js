@@ -159,14 +159,15 @@ Object.assign(Eventable(View.prototype), {
     }
     if (child) {
       var Child = this.template.get(child);
+      var _this = this;
       if (Child && Child.on) {
         Child.on(
           'all',
           function (name, a1, a2, a3, a4) {
             if (a4 === undefined) {
-              this.trigger(`${child}:${name}`, a1, a2, a3)
+              _this.trigger(`${child}:${name}`, a1, a2, a3)
             } else {
-              this.trigger.call(this, [`${child}:${name}`].concat(arguments.slice(1)))
+              _this.trigger.call(this, [`${child}:${name}`].concat(arguments.slice(1)))
             }
           }
         )
