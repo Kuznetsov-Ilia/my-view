@@ -20,6 +20,9 @@ if (!Array.isArray) {
     return op2str.call(a) === '[object Array]';
   };
 }
+function isArray(value) {
+  return Array.isArray(value); //return isset(value) && value instanceof Array;
+}
 function isset(value) {
   return value !== undefined;
 }

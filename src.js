@@ -1,5 +1,5 @@
 import {Eventable} from 'my-event';
-import {noop, isset, isFunction, isNode, isObject, result, inherits} from 'my-util';
+import {noop, isset, isFunction, isNode, isObject, isArray, result, inherits} from 'my-util';
 export default View;
 var UID = 0;
 
