@@ -3,7 +3,8 @@
 var _window = self || window;
 var head = document.head || document.getElementsByTagName('head')[0];
 
-var extend = Object.assign;
+var assign = Object.assign;
+var extend = assign;
 
 function isObject(value) {
   return typeof value === 'object' && value !== null;
@@ -309,6 +310,8 @@ function Eventable(target) {
 var UID = 0;
 
 function View() {
+  var _this2 = this;
+
   var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
   this.cid = UID++;
@@ -327,14 +330,24 @@ function View() {
   if (el) {
     this.render(el);
   }
+  if (options.clone) {
+    options.clone(this, this.template);
+  }
   this.el = this.template.el;
   this.delegateEvents();
   if (this.template.isRendered) {
     this.template.reset(Object.assign({}, this.defaults, options.defaults, options.args));
-    if (this.listenIn) {
+  }
+  if (this.listenIn) {
+    if (this.template.isRendered) {
       this._listenIn(this.listenIn);
+    } else {
+      this.once('rendered', function () {
+        return _this2._listenIn(_this2.listenIn);
+      });
     }
   }
+
   if (this.init !== noop) {
     this.init(options);
   }
@@ -353,6 +366,7 @@ Object.assign(Eventable(View.prototype), {
   //willRender: noop,//executed both after init and after willUpdate*
   didRender: noop, //executed both after didInsertElement and didUpdate*
   // *These hooks can be used in cases where the setup for initial render and subsequent re-renders is idempotent instead of duplicating the logic in both places. In most cases, it is better to try to make these hooks idempotent, in keeping with the spirit of "re-render from scratch every time"
+  umount: noop,
   add: function add(somethingToRemove) {
     if (Array.isArray(somethingToRemove)) {
       this.garbage = this.garbage.concat(somethingToRemove);
@@ -374,6 +388,7 @@ Object.assign(Eventable(View.prototype), {
     if (this.didRender !== noop) {
       this.didRender(root);
     }
+    this.trigger('rendered', root);
     return this;
   },
 
@@ -392,9 +407,9 @@ Object.assign(Eventable(View.prototype), {
     if (this.willDestroyElement !== noop) {
       this.willDestroyElement();
     }
-    /*if (this.template && this.template.remove) {
+    if (this.template && this.template.remove) {
       this.template.remove();
-    }*/
+    }
     /*
      var parent = this.el.parent();
     if (parent !== null) {
@@ -463,11 +478,11 @@ Object.assign(Eventable(View.prototype), {
       }*/
   },
   _listenIn: function _listenIn(child) {
-    var _this2 = this;
+    var _this3 = this;
 
     if (isArray(child)) {
       return child.forEach(function (c) {
-        return _this2._listenIn(c);
+        return _this3._listenIn(c);
       });
     }
     if (child) {
@@ -502,7 +517,7 @@ Object.assign(Eventable(View.prototype), {
     return this;
   },
   set: function set(key, value) {
-    var _this3 = this;
+    var _this4 = this;
 
     if (key === undefined) {
       return this;
@@ -518,8 +533,8 @@ Object.assign(Eventable(View.prototype), {
     var vals = this.state = this.parse(Object.assign(this.args, values));
     if (isset(this.tKeys)) {
       vals = this.tKeys.reduce(function (acc, val) {
-        if (val in _this3.state) {
-          acc[val] = _this3.state[val];
+        if (val in _this4.state) {
+          acc[val] = _this4.state[val];
         }
         return acc;
       }, {});

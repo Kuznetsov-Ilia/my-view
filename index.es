@@ -24,10 +24,16 @@ function View (options={}) {
   this.delegateEvents();
   if (this.template.isRendered) {
     this.template.reset(Object.assign({}, this.defaults, options.defaults, options.args));
-    if (this.listenIn) {
+  }
+  if (this.listenIn) {
+    if (this.template.isRendered) {
       this._listenIn(this.listenIn);
+    } else {
+      this.once('rendered', () => this._listenIn(this.listenIn));
     }
   }
+
+
   if (this.init !== noop) {
     this.init(options);
   }
@@ -46,6 +52,7 @@ Object.assign(Eventable(View.prototype), {
   //willRender: noop,//executed both after init and after willUpdate*
   didRender: noop,//executed both after didInsertElement and didUpdate*
   // *These hooks can be used in cases where the setup for initial render and subsequent re-renders is idempotent instead of duplicating the logic in both places. In most cases, it is better to try to make these hooks idempotent, in keeping with the spirit of "re-render from scratch every time"
+  umount: noop,
   add (somethingToRemove) {
     if (Array.isArray(somethingToRemove)) {
       this.garbage = this.garbage.concat(somethingToRemove);
@@ -68,6 +75,7 @@ Object.assign(Eventable(View.prototype), {
     if (this.didRender !== noop) {
       this.didRender(root);
     }
+    this.trigger('rendered', root);
     return this;
   },
   // Remove this view by taking the element out of the DOM, and removing any
@@ -216,7 +224,7 @@ Object.assign(Eventable(View.prototype), {
     }
     this.template.set(vals);
     return this;
-  },
+  }
 
 });
 

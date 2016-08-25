@@ -1,6 +1,6 @@
 import resolve from 'rollup-plugin-node-resolve';
 export default {
-  entry: 'src.js',
+  entry: 'index.es',
   format: 'cjs',
   plugins: [
     resolve({jsnext: true})
