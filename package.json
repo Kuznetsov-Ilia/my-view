@@ -1,6 +1,6 @@
 {
   "name": "my-view",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "",
   "main": "index.js",
   "jsnext:main": "index.es",
@@ -10,8 +10,8 @@
     "deploy": "git add . && git commit -am 'fix' && git push && npm publish"
   },
   "dependencies": {
-    "my-event": "^1.0.0", 
-    "my-util": "^1.0.0"
+    "my-event": "^2.0.0", 
+    "my-util": "^2.0.0"
   },
   "devDependencies": {
     "rollup": "*",
